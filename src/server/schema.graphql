@@ -1,13 +1,98 @@
 scalar Upload
+scalar ISODate
+scalar ISOTime
+scalar ISODateTime
 
 type Query {
     hello: String!
+    helloA: String!
+
+    templateMetadata: [TemplateMetadata!]!
+    templateMetadatum(id: ID!): TemplateMetadataResult!
 }
 
 type Mutation {
-    dummy: Boolean
+    signUp(name: String!, password: String!): TokenResult!
+    logIn(name: String!, password: String!): TokenResult!
+    refreshToken(refreshToken: String!): TokenResult!
+    revokeToken(token: String!): Boolean!
 }
 
-type Subscription {
-    dummy: Boolean
+type TokenResult {
+    success: Boolean!
+    code: String
+    message: String
+    token: Token
+}
+
+type TemplateMetadataResult {
+    success: Boolean!
+    code: String
+    message: String
+    templateMetadata: TemplateMetadata
+}
+
+type User {
+    id: ID!
+    name: String!
+
+    templateMetadata: [TemplateMetadata!]!
+
+    createdAt: ISODateTime!
+    updatedAt: ISODateTime!
+}
+
+type Token {
+    accessToken: String!
+    refreshToken: String!
+    expiresIn: Int!
+}
+
+type TemplateMetadata {
+    id: ID!
+    authorId: ID!
+    private: Boolean!
+    name: String!
+    description: String!
+    sizeId: ID!
+    orientation: Orientation!
+
+    author: User!
+    size: TemplateSize!
+
+    templates: [Template!]!
+
+    createdAt: ISODateTime!
+    updatedAt: ISODateTime!
+}
+
+type TemplateSize {
+    id: ID!
+    name: String!
+    width: Int!
+    height: Int!
+
+    templateMetadata: [TemplateMetadata!]!
+}
+
+type Template {
+    id: ID!
+    metaId: ID!
+    type: TemplateType!
+    svg: String!
+
+    templateMetadata: TemplateMetadata!
+
+    createdAt: ISODateTime!
+    updatedAt: ISODateTime!
+}
+
+enum Orientation {
+    PORTRAIT
+    LANDSCAPE
+}
+
+enum TemplateType {
+    FRONT
+    BACK
 }

@@ -1,0 +1,17 @@
+query templateMetadatum($id: ID!) {
+    templateMetadatum(id: $id) {
+        success
+        code
+        message
+        templateMetadata {
+            id
+            name
+
+            templates {
+                id
+                type
+                svg
+            }
+        }
+    }
+}

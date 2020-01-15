@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1254" height="754" viewBox="0 0 1254 754">
+    <!-- 東京4号 (91x55) -->
+    <rect width="100%" height="100%" fill="#FFF" />
+    <text x="1204"
+          y="704"
+          font-size="42"
+          text-anchor="end"
+          data-editable="FullName"
+    >Full name</text>
+    <text x="50"
+          y="704"
+          font-size="42"
+          data-editable="Company"
+    >Example Co., Ltd.</text>
+    <text x="1204"
+          y="624"
+          text-anchor="end"
+          font-size="21"
+          data-editable="Department"
+    >Department</text>
+    <text x="1204"
+          y="654"
+          text-anchor="end"
+          font-size="21"
+          data-editable="Position"
+    >Position</text>
+    <g>
+        <rect x="452" y="220" width="350" height="200" />
+        <text x="481"
+              y="360"
+              fill="#FFF"
+              font-size="130"
+        >Logo</text>
+    </g>
+</svg>

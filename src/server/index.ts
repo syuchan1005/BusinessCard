@@ -3,6 +3,7 @@ import Serve from 'koa-static';
 import { historyApiFallback } from 'koa2-connect-history-api-fallback';
 
 import GraphQL from './graphql';
+import initDB from './database/models';
 
 const app = new Koa();
 const graphql = new GraphQL();
@@ -12,6 +13,7 @@ if (process.env.NODE_ENV === 'production') {
 }
 
 (async () => {
+  await initDB();
   await graphql.middleware(app);
 
   app.use(historyApiFallback({}));

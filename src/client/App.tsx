@@ -1,47 +1,90 @@
-import React, { FC, useCallback } from 'react';
+import React, { FC } from 'react';
 import {
   BrowserRouter,
   Route,
   Switch,
-  Link,
 } from 'react-router-dom';
-import { useQuery } from '@apollo/react-hooks';
+import {
+  Theme,
+  MuiThemeProvider,
+  createMuiTheme,
+} from '@material-ui/core';
+import * as colors from '@material-ui/core/colors';
 import { hot } from 'react-hot-loader/root';
 
-import {
-  HelloQuery as HelloQueryData,
-  HelloQueryVariables,
-} from '@common/GQLTypes';
-import HelloQuery from '@client/graphqls/hello.gql';
+import Top from '@client/pages/Top';
+import Template from '@client/pages/Template';
+import TemplateList from '@client/pages/TemplateList';
+import Header from '@client/component/Header';
 
-import About from '@client/pages/About';
-import Home from '@client/pages/Home';
+export const commonTheme = {
+  safeArea: {
+    top: 'env(safe-area-inset-top)',
+    bottom: 'env(safe-area-inset-bottom)',
+    right: 'env(safe-area-inset-right)',
+    left: 'env(safe-area-inset-left)',
+  },
+  appbar: (
+    theme: Theme,
+    styleName: string,
+    calcOption?: string,
+  ) => Object.keys(theme.mixins.toolbar)
+    .map((key) => {
+      const val = theme.mixins.toolbar[key];
+      if (key === 'minHeight') {
+        return [
+          [styleName, `calc(${commonTheme.safeArea.top} + ${val}px${calcOption || ''})`],
+          ['fallbacks', {
+            [styleName]: (calcOption) ? `calc(${val}px${calcOption})` : val,
+          }],
+        ];
+      }
+      return [
+        [key, {
+          // @ts-ignore
+          [styleName]: `calc(${commonTheme.safeArea.top} + ${val.minHeight}px${calcOption || ''})`,
+          fallbacks: {
+            // @ts-ignore
+            [styleName]: (calcOption) ? `calc(${val.minHeight}px${calcOption})` : val.minHeight,
+          },
+        }],
+      ];
+    })
+    .reduce((o, props) => {
+      props.forEach(([k, v]) => {
+        // @ts-ignore
+        // eslint-disable-next-line no-param-reassign
+        o[k] = v;
+      });
+      return o;
+    }, {}),
+};
 
 const App: FC = () => {
-  const {
-    data,
-    loading,
-    refetch,
-  } = useQuery<HelloQueryData, HelloQueryVariables>(HelloQuery);
-
-  const clickRefetch = useCallback(() => refetch(), [refetch]);
+  const theme = createMuiTheme({
+    palette: {
+      primary: {
+        main: colors.blue['500'],
+        light: colors.blue['500'],
+        dark: colors.blue['600'],
+        contrastText: colors.common.white,
+      },
+    },
+  });
 
   return (
-    <main>
-      <div>{(!loading && data) ? data.hello : 'loading'}</div>
-      <button type="button" onClick={clickRefetch}>Refetch</button>
-
+    <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <div>
-          <Link to="/">Home</Link>
-          <Link to="/about">About</Link>
-        </div>
-        <Switch>
-          <Route exact path="/" component={Home} />
-          <Route exact path="/about" component={About} />
-        </Switch>
+        <Header />
+        <main className="appbar--margin">
+          <Switch>
+            <Route exact path="/" component={Top} />
+            <Route exact path="/template/:metaId" component={Template} />
+            <Route exact path="/template_list" component={TemplateList} />
+          </Switch>
+        </main>
       </BrowserRouter>
-    </main>
+    </MuiThemeProvider>
   );
 };
 

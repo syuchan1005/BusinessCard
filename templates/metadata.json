@@ -1,0 +1,38 @@
+{
+  "metadata": [
+    {
+      "private": false,
+      "name": "Sample 001",
+      "description": "Sample business card 001",
+      "orientation": "PORTRAIT",
+      "size": 0,
+      "templates": {
+        "FRONT": "001_front.svg",
+        "BACK": "001_back.svg"
+      }
+    },
+    {
+      "private": false,
+      "name": "Sample 002",
+      "description": "Sample business card 002",
+      "orientation": "LANDSCAPE",
+      "size": 1,
+      "templates": {
+        "FRONT": "002_front.svg",
+        "BACK": "002_back.svg"
+      }
+    }
+  ],
+  "sizes": [
+    {
+      "name": "Tokyo Yongo",
+      "width": 91,
+      "height": 55
+    },
+    {
+      "name":  "USA or Canada",
+      "width": 89,
+      "height": 51
+    }
+  ]
+}
