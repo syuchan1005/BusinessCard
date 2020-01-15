@@ -1,0 +1,28 @@
+query templateMetadata {
+    templateMetadata {
+        id
+        authorId
+        private
+        name
+        description
+        sizeId
+        orientation
+        author {
+            id
+            name
+        }
+        size {
+            id
+            name
+            width
+            height
+        }
+        templates {
+            id
+            type
+            svg
+        }
+        createdAt
+        updatedAt
+    }
+}

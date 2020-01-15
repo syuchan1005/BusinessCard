@@ -1,0 +1,129 @@
+@startuml
+' styles
+skinparam linetype ortho
+skinparam shadowing false
+skinparam shadowing<<with_shadow>> true
+
+!unquoted function Table($name) return "class " + $name + " <<table>> << (T,#add1b2) >>"
+!unquoted function primary_key(x) return "<b>" + x + "</b>"
+!unquoted function foreign_key(x) return "<i>" + x + "</i>"
+!unquoted function unique(x) return "<color:green>" + x + "</color>"
+!unquoted function unique_key(x) return "<color:blue>[" + x + "]</color>"
+!unquoted function $not_null(x) return "<u>" + x + "</u>"
+!unquoted function unique_not_null(x) return "<color:green><u>" + x + "</u></color>"
+!unquoted function foreign_key_not_null(x) return "<i><u>" + x + "</u></i>"
+!unquoted function unique_foreign_key_not_null(x) return "<color:green><i><u>" + x + "</u></i></color>"
+
+skinparam class {
+    ArrowColor #0d0d88
+    ArrowStyle Bold
+}
+
+skinparam class<<table>> {
+    BorderColor #c0c0c0
+    BackgroundColor #fcfad1
+}
+
+hide methods
+hide stereotypes
+
+Table(details) <<with_shadow>> {
+    primary_key(PRIMARY KEY)
+    foreign_key(FOREIGN KEY)
+    $not_null(NOT NULL)
+    unique(UNIQUE)
+    unique_key(UNIQUE_KEY)
+}
+
+' entities
+package "User" {
+    Table(users) {
+        primary_key(id) integer auto_increment
+        ---
+        unique_not_null(name) text
+        $not_null(hash) text
+        ---
+        $not_null(createdAt) datetime
+        $not_null(updatedAt) datetime
+        ---
+        ---
+        uq_users_name
+        (unique (name))
+    }
+
+    Table(tokens) {
+        primary_key(id) integer auto_increment
+        ---
+        foreign_key_not_null(userId) integer
+        $not_null(expires) datetime
+        $not_null(accessToken) text
+        $not_null(refreshToken) text
+        ---
+        ---
+        fk_tokens_userId_id_users
+        (userId -> users(id))
+    }
+}
+
+package "Template" {
+    Table(template_sizes) {
+        primary_key(id) integer auto_increment
+        ---
+        unique_not_null(name)unique_key(name_width_height) text
+        unique_not_null(width)unique_key(name_width_height) integer
+        unique_not_null(height)unique_key(name_width_height) integer
+        ---
+        ---
+        uq_template_sizes_name_width_height
+        (unique (name, width, height))
+    }
+
+    Table(template_metadata) {
+        primary_key(id) integer auto_increment
+        ---
+        unique_foreign_key_not_null(authorId)unique_key(authorId_name_sizeId) integer
+        $not_null(private) boolean = true
+        unique_not_null(name)unique_key(authorId_name_sizeId) text
+        $not_null(description) text
+        unique_foreign_key_not_null(sizeId)unique_key(authorId_name_sizeId) integer
+        $not_null(orientation) enum(PORTRAIT, LANDSCAPE)
+        ---
+        $not_null(createdAt) datetime
+        $not_null(updatedAt) datetime
+        ---
+        ---
+        fk_template_metadata_authorId_id_users
+        (authorId -> users(id))
+        ---
+        fk_template_metadata_sizeId_id_template_sizes
+        (sizeId -> template_sizes(id))
+        ---
+        uq_template_metadata_authorId_name_sizeId
+        (unique (authorId, name, sizeId))
+    }
+
+    Table(templates) {
+        primary_key(id) integer auto_increment
+        ---
+        unique_foreign_key_not_null(metaId)unique_key(metaId_type) integer
+        unique_not_null(type)unique_key(metaId_type) enum(FRONT, BACK)
+        $not_null(svg) text
+        ---
+        $not_null(createdAt) datetime
+        $not_null(updatedAt) datetime
+        ---
+        ---
+        fk_templates_metaId_id_template_metadata
+        (metaId -> template_metadata(id))
+        ---
+        uq_templates_metaId_type
+        (unique (metaId, type))
+    }
+}
+
+' relations
+users -r-o{ tokens
+template_metadata --o{ templates
+users --o{ template_metadata
+template_metadata }o-- template_sizes
+@enduml

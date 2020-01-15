@@ -10,3 +10,7 @@ generates:
 config:
   scalars:
     Upload: "Promise<{ filename: string, mimetype: string, encoding: string, createReadStream: () => NodeJS.ReadableStream }>"
+    ISODateTime: Date
+    ISODate: Date
+    ISOTime: Date
+  operationResultSuffix: "Data"

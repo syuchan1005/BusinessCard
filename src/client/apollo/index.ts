@@ -1,4 +1,5 @@
 import { ApolloClient } from 'apollo-client';
+import { setContext } from 'apollo-link-context';
 import { InMemoryCache, NormalizedCacheObject } from 'apollo-cache-inmemory';
 import { CachePersistor } from 'apollo-cache-persist';
 import { createUploadLink } from 'apollo-upload-client';
@@ -70,10 +71,22 @@ const customFetch = (uri1: any, options: any) => {
   return fetch(uri1, options);
 };
 
-const getClient = async ()
-  : Promise<[ApolloClient<NormalizedCacheObject>, CachePersistor<NormalizedCacheObject>]> => {
+const getClient = async (
+  createHeader: () => string | undefined = (() => undefined),
+): Promise<[ApolloClient<NormalizedCacheObject>, CachePersistor<NormalizedCacheObject>]> => {
   const cache = new InMemoryCache({
     freezeResults: false,
+  });
+
+  const authLink = setContext((operation, prevContext) => {
+    const token = createHeader();
+    return {
+      ...prevContext,
+      headers: {
+        ...prevContext?.headers,
+        authorization: token ? `Bearer ${token}` : '',
+      },
+    };
   });
 
   const apolloClient = new ApolloClient({
@@ -92,6 +105,7 @@ const getClient = async ()
         }
         if (networkError) log(`[Network error]: ${networkError}`);
       }),
+      authLink,
       ApolloLink.split(
         ({ query }) => {
           const definition = getMainDefinition(query);

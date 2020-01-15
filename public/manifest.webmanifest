@@ -1,6 +1,6 @@
 {
-  "name": "__replace__",
-  "short_name": "__replace__",
+  "name": "business_card",
+  "short_name": "business_card",
   "display": "fullscreen",
   "orientation": "portrait",
   "theme_color": "#4caf50",

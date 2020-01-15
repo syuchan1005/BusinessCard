@@ -1,6 +1,9 @@
-dist
+dist/
 node_modules
 .DS_Store
 
-.idea
+.idea/
 *.iml
+
+*.sqlite
+/build-migrations
