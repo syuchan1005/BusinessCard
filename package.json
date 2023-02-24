@@ -103,7 +103,7 @@
       "react-transition-group": "^4.3.0",
       "redux": "^4.0.5",
       "reselect": "^4.0.0",
-      "sequelize": "^5.21.3",
+      "sequelize": "^6.29.0",
       "sequelize-cli": "^5.5.1",
       "sqlite3": "^4.1.1",
       "subscriptions-transport-ws": "^0.9.16",
